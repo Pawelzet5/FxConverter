@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FxConverter"
 include(":app")
-include(":currency_conventer")
+include(":currency_converter")
