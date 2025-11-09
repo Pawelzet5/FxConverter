@@ -1,6 +1,6 @@
 package com.example.currency_conventer.data.api
 
-import com.example.currency_conventer.data.model.FxRateResponseDto
+import com.example.currency_conventer.data.model.ExchangeInfoResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,5 +10,5 @@ interface FxRatesService {
         @Query("from") fromCurrencyCode: String,
         @Query("to") toCurrencyCode: String,
         @Query("amount") amount: Double
-    ): FxRateResponseDto
+    ): ExchangeInfoResponseDto
 }

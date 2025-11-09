@@ -1,7 +1,7 @@
 package com.example.currency_conventer.data.repository
 
 import com.example.currency_conventer.data.api.FxRatesService
-import com.example.currency_conventer.data.model.FxRateResponseDto
+import com.example.currency_conventer.data.model.ExchangeInfoResponseDto
 import com.example.currency_conventer.domain.common.Result
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import io.mockk.coEvery
@@ -40,7 +40,7 @@ class FxRatesRepositoryImplTest {
     fun `Get currency conversion, api call successful, returns success with correct data`() =
         runTest(testDispatcher) {
             // Given
-            val mockResponse = FxRateResponseDto(
+            val mockResponse = ExchangeInfoResponseDto(
                 rate = 1.15694,
                 convertedAmount = 115.69
             )
@@ -73,7 +73,7 @@ class FxRatesRepositoryImplTest {
         runTest(testDispatcher) {
             // Given
             val plnCurrency = CurrencyDefaults.PLN
-            val mockResponse = FxRateResponseDto(
+            val mockResponse = ExchangeInfoResponseDto(
                 rate = 4.25,
                 convertedAmount = 42.5
             )
@@ -100,7 +100,7 @@ class FxRatesRepositoryImplTest {
         runTest(testDispatcher) {
             // Given
             val decimalAmount = 123.45
-            val mockResponse = FxRateResponseDto(
+            val mockResponse = ExchangeInfoResponseDto(
                 rate = 1.15694,
                 convertedAmount = 142.82
             )
@@ -166,7 +166,7 @@ class FxRatesRepositoryImplTest {
     fun `Get currency conversion, http exception 404, returns error with server message`() =
         runTest(testDispatcher) {
             // Given
-            val mockErrorResponse = Response.error<FxRateResponseDto>(
+            val mockErrorResponse = Response.error<ExchangeInfoResponseDto>(
                 404,
                 "Not found".toResponseBody(null)
             )
@@ -192,7 +192,7 @@ class FxRatesRepositoryImplTest {
     fun `Get currency conversion, http exception 500, returns error with server code`() =
         runTest(testDispatcher) {
             // Given
-            val mockErrorResponse = Response.error<FxRateResponseDto>(
+            val mockErrorResponse = Response.error<ExchangeInfoResponseDto>(
                 500,
                 "Internal server error".toResponseBody(null)
             )
@@ -271,7 +271,7 @@ class FxRatesRepositoryImplTest {
     fun `Get currency conversion, zero amount, returns success with zero conversion`() =
         runTest(testDispatcher) {
             // Given
-            val mockResponse = FxRateResponseDto(
+            val mockResponse = ExchangeInfoResponseDto(
                 rate = 1.15694,
                 convertedAmount = 0.0
             )
