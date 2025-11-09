@@ -1,6 +1,7 @@
 package com.example.currency_conventer.di
 
 import com.example.currency_conventer.data.api.FxRatesService
+import com.example.currency_converter.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -28,7 +29,11 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
+                    level = if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
+                    }
                 }
             )
             .connectTimeout(30, TimeUnit.SECONDS)
