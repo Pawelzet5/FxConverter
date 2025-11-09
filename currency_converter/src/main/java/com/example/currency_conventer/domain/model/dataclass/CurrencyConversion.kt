@@ -1,7 +1,8 @@
 package com.example.currency_conventer.domain.model.dataclass
 
-data class ExchangeRate(
+data class CurrencyConversion(
     val from: Currency,
     val to: Currency,
-    val rate: Float
+    val rate: Double,
+    val convertedAmount: Double
 )

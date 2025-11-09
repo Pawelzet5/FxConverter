@@ -1,7 +1,9 @@
 package com.example.currency_conventer.domain.repository
 
+import com.example.currency_conventer.domain.common.Result
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.Currency
+import com.example.currency_conventer.domain.model.dataclass.CurrencyConversion
 
 class FakeFxRatesRepository : FxRatesRepository {
     private val mockRates = mapOf(
@@ -19,14 +21,21 @@ class FakeFxRatesRepository : FxRatesRepository {
         "UAH-GBP" to 0.020
     )
 
-    override suspend fun getExchangeRate(
+    override suspend fun getCurrencyConversion(
         from: Currency,
         to: Currency,
         amount: Double
-    ): Result<Double> {
+    ): Result<CurrencyConversion> {
         val key = "${from.code}-${to.code}"
         val rate = mockRates[key] ?: 1.0
-        return Result.success(rate)
+        return Result.Success(
+            CurrencyConversion(
+                from = from,
+                to = to,
+                rate = rate,
+                convertedAmount = amount * rate
+            )
+        )
     }
 
     override fun getSupportedCurrencies(): List<Currency> {
