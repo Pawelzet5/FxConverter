@@ -8,4 +8,5 @@ sealed interface ConversionScreenAction {
     data class SendingCurrencySelected(val currency: Currency): ConversionScreenAction
     data class ReceivingCurrencySelected(val currency: Currency): ConversionScreenAction
     data object SwapClicked: ConversionScreenAction
+    data object HideErrorPanelClicked: ConversionScreenAction
 }

@@ -44,6 +44,10 @@ class ConversionScreenViewModel @Inject constructor(
                 handleReceivingCurrencySelected(action.currency)
 
             ConversionScreenAction.SwapClicked -> handleSwapClicked()
+
+            ConversionScreenAction.HideErrorPanelClicked -> _screenState.update {
+                it.copy(errorPanelState = it.errorPanelState?.copy(isVisible = false))
+            }
         }
     }
 
@@ -186,7 +190,8 @@ class ConversionScreenViewModel @Inject constructor(
                             it.copy(
                                 errorPanelState = ErrorPanelState(
                                     title = "No Network",
-                                    message = "Check your internet connection"
+                                    message = "Check your internet connection",
+                                    isVisible = true
                                 )
                             )
                         }
@@ -195,7 +200,8 @@ class ConversionScreenViewModel @Inject constructor(
                             it.copy(
                                 errorPanelState = ErrorPanelState(
                                     title = "Unexpected error",
-                                    message = "Please try again later"
+                                    message = "Please try again later",
+                                    isVisible = true
                                 )
                             )
                         }
