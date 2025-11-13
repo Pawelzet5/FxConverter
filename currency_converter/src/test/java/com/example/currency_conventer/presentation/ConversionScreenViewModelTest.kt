@@ -74,7 +74,7 @@ class ConversionScreenViewModelTest {
             val state = expectMostRecentItem()
             assertEquals("100", state.sendingAmount)
             assertEquals("23.5", state.receivingAmount)
-            assertEquals("1 PLN = 0.235 UAH", state.ratioText)
+            assertEquals("1 PLN = 0.24 UAH", state.ratioText)
             assertNull(state.sendingLimitExceededMessage)
         }
     }
@@ -338,7 +338,7 @@ class ConversionScreenViewModelTest {
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(eurCurrency, state.sendingCurrency)
-            assertEquals("1 EUR = 42.5 UAH", state.ratioText)
+            assertEquals("1 EUR = 42.50 UAH", state.ratioText)
         }
     }
 
