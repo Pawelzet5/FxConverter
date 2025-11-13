@@ -57,7 +57,7 @@ fun CurrencyExchangeScreen(
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        CurrencyExchangeCard(
+        CurrencyExchangeSection(
             state = state,
             onAction = onAction,
             onSendingCurrencyClick = {
@@ -88,7 +88,7 @@ fun CurrencyExchangeScreen(
 }
 
 @Composable
-fun CurrencyExchangeCard(
+fun CurrencyExchangeSection(
     state: CurrencyExchangeScreenState,
     onAction: (CurrencyExchangeScreenAction) -> Unit,
     onSendingCurrencyClick: () -> Unit,
@@ -134,7 +134,7 @@ fun CurrencyExchangeCard(
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
                     .clickable { onAction(CurrencyExchangeScreenAction.SwapClicked) }
-                    .align(BiasAlignment(horizontalBias = -0.7f, verticalBias = 0f))
+                    .align(BiasAlignment(horizontalBias = -0.75f, verticalBias = 0f))
             )
 
             state.ratioText?.let { ratio ->
