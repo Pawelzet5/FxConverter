@@ -62,42 +62,47 @@ class ValidateAmountUseCaseTest {
 
     @Test
     fun `Validate currency limit, amount equals limit, returns valid`() {
-        val result = validateAmountUseCase.currencyLimitValidation("10000", eurCurrency)
+        val amount = (eurCurrency.sendingLimit).toString()
+        val result = validateAmountUseCase.currencyLimitValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Valid)
     }
 
     @Test
     fun `Validate currency limit, amount exceeds limit, returns warning`() {
-        val result = validateAmountUseCase.currencyLimitValidation("15000", eurCurrency)
+        val amount = (eurCurrency.sendingLimit + 1).toString()
+        val result = validateAmountUseCase.currencyLimitValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Warning)
         assertEquals(
-            "Maximum sending amount: 10000.0 EUR",
+            "Maximum sending amount: ${eurCurrency.sendingLimit} EUR",
             (result as ValidationResult.Warning).warningMessage
         )
     }
 
     @Test
     fun `Validate currency limit, amount slightly exceeds limit, returns warning`() {
-        val result = validateAmountUseCase.currencyLimitValidation("10000.01", eurCurrency)
+        val amount = (eurCurrency.sendingLimit + 0.01).toString()
+        val result = validateAmountUseCase.currencyLimitValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Warning)
         assertEquals(
-            "Maximum sending amount: 10000.0 EUR",
+            "Maximum sending amount: ${eurCurrency.sendingLimit} EUR",
             (result as ValidationResult.Warning).warningMessage
         )
     }
 
     @Test
     fun `Full validation, valid amount within limit, returns valid`() {
-        val result = validateAmountUseCase.fullValidation("5000", eurCurrency)
+        val amount = (eurCurrency.sendingLimit - 1).toString()
+        val result = validateAmountUseCase.fullValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Valid)
     }
 
     @Test
     fun `Full validation, valid amount exceeds limit, returns warning`() {
-        val result = validateAmountUseCase.fullValidation("15000", eurCurrency)
+        val amount = (eurCurrency.sendingLimit + 1).toString()
+        val result = validateAmountUseCase.fullValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Warning)
         assertEquals(
-            "Maximum sending amount: 10000.0 EUR",
+            "Maximum sending amount: ${eurCurrency.sendingLimit} EUR",
             (result as ValidationResult.Warning).warningMessage
         )
     }
@@ -118,6 +123,7 @@ class ValidateAmountUseCaseTest {
 
     @Test
     fun `Full validation, negative number exceeding limit, returns invalid not warning`() {
+        val amount = (eurCurrency.sendingLimit * -1).toString()
         val result = validateAmountUseCase.fullValidation("-15000", eurCurrency)
         assertTrue(result is ValidationResult.Invalid)
         assertEquals("Amount cannot be negative", (result as ValidationResult.Invalid).errorMessage)
@@ -125,7 +131,8 @@ class ValidateAmountUseCaseTest {
 
     @Test
     fun `Full validation, amount at exact limit, returns valid`() {
-        val result = validateAmountUseCase.fullValidation("10000", eurCurrency)
+        val amount = (eurCurrency.sendingLimit).toString()
+        val result = validateAmountUseCase.fullValidation(amount, eurCurrency)
         assertTrue(result is ValidationResult.Valid)
     }
 }
