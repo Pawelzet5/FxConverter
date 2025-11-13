@@ -204,6 +204,10 @@ class ConversionScreenViewModel @Inject constructor(
         }
     }
 
-    private fun prepareRatioText(currencyConversion: CurrencyConversion): String =
-        "1 ${currencyConversion.from.code} = ${currencyConversion.rate} ${currencyConversion.to.code}"
+    @SuppressLint("DefaultLocale")
+    private fun prepareRatioText(currencyConversion: CurrencyConversion): String {
+        val roundedRate = String.format("%.2f", currencyConversion.rate)
+        return "1 ${currencyConversion.from.code} = $roundedRate ${currencyConversion.to.code}"
+    }
+
 }
