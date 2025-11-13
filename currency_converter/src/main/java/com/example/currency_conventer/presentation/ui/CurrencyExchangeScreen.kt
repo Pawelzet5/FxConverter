@@ -10,8 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -273,6 +272,14 @@ fun DecimalTextField(
 ) {
     val focusManager = LocalFocusManager.current
     val decimalNumberRegex = Regex("^\\d*\\.?\\d{0,2}$")
+    val fontSize = remember(value) {
+        when {
+            value.length <= 6 -> 40.sp
+            value.length <= 9 -> 32.sp
+            value.length <= 12 -> 24.sp
+            else -> 20.sp
+        }
+    }
 
     BasicTextField(
         value = value,
@@ -286,7 +293,7 @@ fun DecimalTextField(
         modifier = modifier,
         textStyle = TextStyle(
             color = textColor,
-            fontSize = 40.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.End
         ),
