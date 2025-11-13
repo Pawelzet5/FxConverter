@@ -7,6 +7,7 @@ import com.example.currency_conventer.domain.model.dataclass.CurrencyConversion
 import com.example.currency_conventer.domain.repository.FxRatesRepository
 import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
 import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
+import com.example.currency_conventer.presentation.state.CurrencyInputType
 import com.example.currency_conventer.presentation.state.ErrorPanelState
 import com.example.currency_conventer.presentation.viewmodel.CurrencyExchangeScreenViewModel
 import com.example.currency_converter.R
@@ -75,7 +76,7 @@ class CurrencyExchangeScreenViewModelTest {
             val state = expectMostRecentItem()
             assertEquals("100", state.sendingAmount)
             assertEquals("23.5", state.receivingAmount)
-            assertEquals(0.24, state.exchangeRatio)
+            assertEquals("1 PLN = 0.24 UAH", state.exchangeRatio)
             assertNull(state.sendingLimitExceededMessage)
         }
     }
@@ -300,12 +301,12 @@ class CurrencyExchangeScreenViewModelTest {
     @Test
     fun `Select sending currency click, opens sending currency selection dialog`() = runTest {
         // When
-        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.SENDING))
 
         // Then
         viewModel.screenState.test {
             val state = expectMostRecentItem()
-            assertTrue(state.currencySelectionDialogState.isSendingCurrencySelection)
+            assertEquals(CurrencyInputType.SENDING, state.currencySelectionDialogState.currencyInputType)
             assertTrue(state.currencySelectionDialogState.isCurrencySelectionDialogOpen)
         }
     }
@@ -313,12 +314,12 @@ class CurrencyExchangeScreenViewModelTest {
     @Test
     fun `Select receiving currency click, opens receiving currency selection dialog`() = runTest {
         // When
-        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.RECEIVING))
 
         // Then
         viewModel.screenState.test {
             val state = expectMostRecentItem()
-            assertFalse(state.currencySelectionDialogState.isSendingCurrencySelection)
+            assertEquals(CurrencyInputType.RECEIVING, state.currencySelectionDialogState.currencyInputType)
             assertTrue(state.currencySelectionDialogState.isCurrencySelectionDialogOpen)
         }
     }
@@ -333,17 +334,17 @@ class CurrencyExchangeScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(eurCurrency, uahCurrency, 100.0)
         } returns Result.Success(conversion)
-        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.SENDING))
 
         // When
-        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(eurCurrency))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(eurCurrency, CurrencyInputType.SENDING))
         advanceTimeBy(301)
 
         // Then
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(eurCurrency, state.sendingCurrency)
-            assertEquals(4.25, state.exchangeRatio)
+            assertEquals("1 EUR = 42.50 UAH", state.exchangeRatio)
         }
     }
 
@@ -357,10 +358,10 @@ class CurrencyExchangeScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(plnCurrency, gbpCurrency, 100.0)
         } returns Result.Success(conversion)
-        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.RECEIVING))
 
         // When
-        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(gbpCurrency))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(gbpCurrency, CurrencyInputType.RECEIVING))
         advanceTimeBy(301)
 
         // Then

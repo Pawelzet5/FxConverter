@@ -38,7 +38,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 handleReceivingAmountInputChange(action.newText)
 
             is CurrencyExchangeScreenAction.OnCurrencySelected ->
-                handleCurrencySelected(action.currency)
+                handleCurrencySelected(action.currency, action.currencyInputType)
 
             CurrencyExchangeScreenAction.SwapClicked -> handleSwapClicked()
 
@@ -50,7 +50,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 it.copy(
                     currencySelectionDialogState = CurrencySelectionDialogState(
                         isCurrencySelectionDialogOpen = true,
-                        isSendingCurrencySelection = action.isSendingCurrencySelection
+                        currencyInputType = action.currencyInputType
                     )
                 )
             }
@@ -106,22 +106,22 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
             })
     }
 
-    private fun handleCurrencySelected(currency: Currency) {
-        setSelectCurrencyDialogClosed()
-        val isSendingCurrencySelected =
-            screenState.value.currencySelectionDialogState.isSendingCurrencySelection
-        val sendingCurrency =
-            if (isSendingCurrencySelected) currency else screenState.value.sendingCurrency
-        val receivingCurrency =
-            if (isSendingCurrencySelected) screenState.value.receivingCurrency else currency
-
-        _screenState.update {
-            it.copy(
-                sendingCurrency = sendingCurrency,
-                receivingCurrency = receivingCurrency,
-                exchangeRatio = null
-            )
+    private fun handleCurrencySelected(currency: Currency, currencyInputType: CurrencyInputType) {
+        when (currencyInputType) {
+            CurrencyInputType.SENDING -> _screenState.update {
+                    it.copy(
+                        sendingCurrency = currency,
+                        exchangeRatio = null
+                    )
+                }
+            CurrencyInputType.RECEIVING -> _screenState.update {
+                it.copy(
+                    receivingCurrency = currency,
+                    exchangeRatio = null
+                )
+            }
         }
+        setSelectCurrencyDialogClosed()
         clearAndRecalculate()
     }
 

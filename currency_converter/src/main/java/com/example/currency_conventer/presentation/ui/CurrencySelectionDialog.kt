@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.Currency
+import com.example.currency_conventer.presentation.state.CurrencyInputType
 import com.example.currency_conventer.presentation.ui.theme.*
 import com.example.currency_converter.R
 
@@ -26,11 +27,10 @@ import com.example.currency_converter.R
 fun CurrencyPickerBottomSheet(
     sheetState: SheetState,
     currencies: List<Currency>,
-    isSendingCurrencySelection: Boolean,
+    currencyInputType: CurrencyInputType,
     onCurrencySelected: (Currency) -> Unit,
     onDismiss: () -> Unit
 ) {
-
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
@@ -42,11 +42,8 @@ fun CurrencyPickerBottomSheet(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp)
         ) {
-            val headerText = stringResource(
-                if (isSendingCurrencySelection) R.string.sending_from else R.string.sending_to
-            )
             Text(
-                text = headerText,
+                text = stringResource(currencyInputType.labelTextResId),
                 fontSize = 38.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

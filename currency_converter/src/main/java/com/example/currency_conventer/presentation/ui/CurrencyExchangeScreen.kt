@@ -31,8 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.Currency
 import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
-import com.example.currency_conventer.presentation.state.CurrencyExchangeScreenState
-import com.example.currency_conventer.presentation.state.ErrorPanelState
+import com.example.currency_conventer.presentation.state.*
 import com.example.currency_conventer.presentation.ui.theme.*
 import com.example.currency_conventer.presentation.viewmodel.CurrencyExchangeScreenViewModel
 import com.example.currency_converter.R
@@ -58,12 +57,6 @@ fun CurrencyExchangeScreen(
         CurrencyExchangeSection(
             state = state,
             onAction = onAction,
-            onSendingCurrencyClick = {
-                onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(true))
-            },
-            onReceivingCurrencyClick = {
-                onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(false))
-            },
             modifier = Modifier
         )
 
@@ -78,8 +71,15 @@ fun CurrencyExchangeScreen(
         CurrencyPickerBottomSheet(
             sheetState = rememberModalBottomSheetState(),
             currencies = state.availableCurrencies,
-            isSendingCurrencySelection = state.currencySelectionDialogState.isSendingCurrencySelection,
-            onCurrencySelected = { onAction(CurrencyExchangeScreenAction.OnCurrencySelected(it)) },
+            currencyInputType = state.currencySelectionDialogState.currencyInputType,
+            onCurrencySelected = {
+                onAction(
+                    CurrencyExchangeScreenAction.OnCurrencySelected(
+                        it,
+                        state.currencySelectionDialogState.currencyInputType
+                    )
+                )
+            },
             onDismiss = { onAction(CurrencyExchangeScreenAction.SelectCurrencyDialogDismissed) },
         )
     }
@@ -89,8 +89,6 @@ fun CurrencyExchangeScreen(
 fun CurrencyExchangeSection(
     state: CurrencyExchangeScreenState,
     onAction: (CurrencyExchangeScreenAction) -> Unit,
-    onSendingCurrencyClick: () -> Unit,
-    onReceivingCurrencyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -112,7 +110,13 @@ fun CurrencyExchangeSection(
                     onAmountChange = {
                         onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange(it))
                     },
-                    onCurrencyClick = onSendingCurrencyClick
+                    onCurrencyClick = {
+                        onAction(
+                            CurrencyExchangeScreenAction.SelectCurrencyClicked(
+                                currencyInputType = CurrencyInputType.SENDING
+                            )
+                        )
+                    }
                 )
 
                 ReceivingSection(
@@ -121,7 +125,13 @@ fun CurrencyExchangeSection(
                     onAmountChange = {
                         onAction(CurrencyExchangeScreenAction.OnReceivingAmountInputChange(it))
                     },
-                    onCurrencyClick = onReceivingCurrencyClick
+                    onCurrencyClick = {
+                        onAction(
+                            CurrencyExchangeScreenAction.SelectCurrencyClicked(
+                                currencyInputType = CurrencyInputType.RECEIVING
+                            )
+                        )
+                    }
                 )
             }
 
