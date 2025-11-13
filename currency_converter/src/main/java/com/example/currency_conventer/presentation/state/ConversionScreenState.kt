@@ -11,7 +11,8 @@ data class ConversionScreenState(
     val receivingAmount: String,
     val ratioText: String?,
     val sendingLimitExceededMessage: String?,
-    val errorPanelState: ErrorPanelState? = null
+    val errorPanelState: ErrorPanelState? = null,
+    val currencySelectionDialogState: CurrencySelectionDialogState = CurrencySelectionDialogState()
 ) {
     companion object {
         fun initialValue() = ConversionScreenState(

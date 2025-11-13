@@ -150,9 +150,27 @@ class ConversionScreenViewModelTest {
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(
-                ErrorPanelState("No Network", "Check your internet connection"),
+                ErrorPanelState("No Network", "Check your internet connection", true),
                 state.errorPanelState
             )
+        }
+    }
+
+    @Test
+    fun `Dismiss error panel, error panel hidden`() = runTest {
+        // Given
+        coEvery {
+            fxRatesRepository.getCurrencyConversion(plnCurrency, uahCurrency, 100.0)
+        } returns Result.Error(IOException(), "Network unavailable")
+        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        advanceTimeBy(301)
+
+        // WHEN
+        viewModel.onAction(ConversionScreenAction.DismissErrorPanelClicked)
+
+        // Then
+        viewModel.screenState.test {
+            assertFalse(expectMostRecentItem().errorPanelState?.isVisible!!)
         }
     }
 
@@ -275,7 +293,33 @@ class ConversionScreenViewModelTest {
     }
 
     @Test
-    fun `Select sending currency, with valid amount, triggers conversion`() = runTest {
+    fun `Select sending currency click, opens sending currency selection dialog`() = runTest {
+        // When
+        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
+
+        // Then
+        viewModel.screenState.test {
+            val state = expectMostRecentItem()
+            assertTrue(state.currencySelectionDialogState.isSendingCurrencySelection)
+            assertTrue(state.currencySelectionDialogState.isCurrencySelectionDialogOpen)
+        }
+    }
+
+    @Test
+    fun `Select receiving currency click, opens receiving currency selection dialog`() = runTest {
+        // When
+        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
+
+        // Then
+        viewModel.screenState.test {
+            val state = expectMostRecentItem()
+            assertFalse(state.currencySelectionDialogState.isSendingCurrencySelection)
+            assertTrue(state.currencySelectionDialogState.isCurrencySelectionDialogOpen)
+        }
+    }
+
+    @Test
+    fun `Select sending currency, triggers conversion`() = runTest {
         // Given
         viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
@@ -284,9 +328,10 @@ class ConversionScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(eurCurrency, uahCurrency, 100.0)
         } returns Result.Success(conversion)
+        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
 
         // When
-        viewModel.onAction(ConversionScreenAction.SendingCurrencySelected(eurCurrency))
+        viewModel.onAction(ConversionScreenAction.OnCurrencySelected(eurCurrency))
         advanceTimeBy(301)
 
         // Then
@@ -307,9 +352,10 @@ class ConversionScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(plnCurrency, gbpCurrency, 100.0)
         } returns Result.Success(conversion)
+        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
 
         // When
-        viewModel.onAction(ConversionScreenAction.ReceivingCurrencySelected(gbpCurrency))
+        viewModel.onAction(ConversionScreenAction.OnCurrencySelected(gbpCurrency))
         advanceTimeBy(301)
 
         // Then

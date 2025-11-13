@@ -10,8 +10,7 @@ import com.example.currency_conventer.domain.model.dataclass.result.ValidationRe
 import com.example.currency_conventer.domain.repository.FxRatesRepository
 import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
 import com.example.currency_conventer.presentation.action.ConversionScreenAction
-import com.example.currency_conventer.presentation.state.ConversionScreenState
-import com.example.currency_conventer.presentation.state.ErrorPanelState
+import com.example.currency_conventer.presentation.state.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -38,16 +37,30 @@ class ConversionScreenViewModel @Inject constructor(
             is ConversionScreenAction.OnReceivingAmountInputChange ->
                 handleReceivingAmountInputChange(action.newText)
 
-            is ConversionScreenAction.SendingCurrencySelected ->
-                handleSendingCurrencySelected(action.currency)
-
-            is ConversionScreenAction.ReceivingCurrencySelected ->
-                handleReceivingCurrencySelected(action.currency)
+            is ConversionScreenAction.OnCurrencySelected ->
+                handleCurrencySelected(action.currency)
 
             ConversionScreenAction.SwapClicked -> handleSwapClicked()
 
-            ConversionScreenAction.HideErrorPanelClicked -> _screenState.update {
+            ConversionScreenAction.DismissErrorPanelClicked -> _screenState.update {
                 it.copy(errorPanelState = it.errorPanelState?.copy(isVisible = false))
+            }
+
+            is ConversionScreenAction.SelectCurrencyClicked -> _screenState.update {
+                it.copy(
+                    currencySelectionDialogState = CurrencySelectionDialogState(
+                        isCurrencySelectionDialogOpen = true,
+                        isSendingCurrencySelection = action.isSendingCurrencySelection
+                    )
+                )
+            }
+
+            ConversionScreenAction.SelectCurrencyDialogDismissed -> _screenState.update {
+                it.copy(
+                    currencySelectionDialogState = CurrencySelectionDialogState(
+                        isCurrencySelectionDialogOpen = false
+                    )
+                )
             }
         }
     }
@@ -92,20 +105,17 @@ class ConversionScreenViewModel @Inject constructor(
         )
     }
 
-    private fun handleSendingCurrencySelected(currency: Currency) {
+    private fun handleCurrencySelected(currency: Currency) {
+        val isSendingCurrencySelected =
+            screenState.value.currencySelectionDialogState.isSendingCurrencySelection
+        val sendingCurrency =
+            if (isSendingCurrencySelected) currency else screenState.value.sendingCurrency
+        val receivingCurrency =
+            if (isSendingCurrencySelected) screenState.value.receivingCurrency else currency
         _screenState.update {
             it.copy(
-                sendingCurrency = currency,
-                ratioText = null
-            )
-        }
-        clearAndRecalculate()
-    }
-
-    private fun handleReceivingCurrencySelected(currency: Currency) {
-        _screenState.update {
-            it.copy(
-                receivingCurrency = currency,
+                sendingCurrency = sendingCurrency,
+                receivingCurrency = receivingCurrency,
                 ratioText = null
             )
         }
