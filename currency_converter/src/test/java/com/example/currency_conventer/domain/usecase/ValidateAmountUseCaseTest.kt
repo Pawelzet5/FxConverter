@@ -37,21 +37,18 @@ class ValidateAmountUseCaseTest {
     fun `Validate amount input, negative number, returns invalid`() {
         val result = validateAmountUseCase.amountInputValidation("-50")
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount cannot be negative", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test
     fun `Validate amount input, non-numeric text, returns invalid`() {
         val result = validateAmountUseCase.amountInputValidation("abc")
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount must be a number", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test
     fun `Validate amount input, empty string, returns invalid`() {
         val result = validateAmountUseCase.amountInputValidation("")
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount must be a number", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test
@@ -111,14 +108,12 @@ class ValidateAmountUseCaseTest {
     fun `Full validation, negative number, returns invalid`() {
         val result = validateAmountUseCase.fullValidation("-50", eurCurrency)
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount cannot be negative", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test
     fun `Full validation, non-numeric text, returns invalid`() {
         val result = validateAmountUseCase.fullValidation("abc", eurCurrency)
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount must be a number", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test
@@ -126,7 +121,6 @@ class ValidateAmountUseCaseTest {
         val amount = (eurCurrency.sendingLimit * -1).toString()
         val result = validateAmountUseCase.fullValidation("-15000", eurCurrency)
         assertTrue(result is ValidationResult.Invalid)
-        assertEquals("Amount cannot be negative", (result as ValidationResult.Invalid).errorMessage)
     }
 
     @Test

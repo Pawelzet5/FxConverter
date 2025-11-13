@@ -13,13 +13,14 @@ class ValidateAmountUseCase @Inject constructor() {
     }
 
     fun amountInputValidation(amount: String): ValidationResult = try {
-        val amountDouble = amount.toDouble()
         when {
-            amountDouble < 0 -> ValidationResult.Invalid("Amount cannot be negative")
+            amount.isEmpty() -> ValidationResult.Invalid
+            amount.isBlank() -> ValidationResult.Invalid
+            amount.toDouble() < 0 -> ValidationResult.Invalid
             else -> ValidationResult.Valid
         }
     } catch (e: NumberFormatException) {
-        ValidationResult.Invalid("Amount must be a number")
+        ValidationResult.Invalid
     }
 
     fun currencyLimitValidation(amount: String, currency: Currency): ValidationResult =

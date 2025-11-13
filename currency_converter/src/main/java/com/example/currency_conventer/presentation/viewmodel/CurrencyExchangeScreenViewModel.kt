@@ -160,12 +160,6 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
         }
 
         when (validationResult) {
-            is ValidationResult.Invalid -> {
-                _screenState.update {
-                    it.copy(sendingLimitExceededMessage = validationResult.errorMessage)
-                }
-            }
-
             ValidationResult.Valid -> {
                 _screenState.update {
                     it.copy(sendingLimitExceededMessage = null)
@@ -191,6 +185,8 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                     onSuccess
                 )
             }
+
+            else -> Unit
         }
     }
 
