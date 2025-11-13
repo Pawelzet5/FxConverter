@@ -55,13 +55,17 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 )
             }
 
-            CurrencyExchangeScreenAction.SelectCurrencyDialogDismissed -> _screenState.update {
-                it.copy(
-                    currencySelectionDialogState = CurrencySelectionDialogState(
-                        isCurrencySelectionDialogOpen = false
-                    )
+            CurrencyExchangeScreenAction.SelectCurrencyDialogDismissed -> setSelectCurrencyDialogClosed()
+        }
+    }
+
+    private fun setSelectCurrencyDialogClosed() {
+        _screenState.update {
+            it.copy(
+                currencySelectionDialogState = CurrencySelectionDialogState(
+                    isCurrencySelectionDialogOpen = false
                 )
-            }
+            )
         }
     }
 
@@ -103,6 +107,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
     }
 
     private fun handleCurrencySelected(currency: Currency) {
+        setSelectCurrencyDialogClosed()
         val isSendingCurrencySelected =
             screenState.value.currencySelectionDialogState.isSendingCurrencySelection
         val sendingCurrency =
