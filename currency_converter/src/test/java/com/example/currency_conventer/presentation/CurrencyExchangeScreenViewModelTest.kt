@@ -76,7 +76,8 @@ class CurrencyExchangeScreenViewModelTest {
             val state = expectMostRecentItem()
             assertEquals("100", state.sendingAmount)
             assertEquals("23.5", state.receivingAmount)
-            assertEquals("1 PLN = 0.24 UAH", state.exchangeRatio)
+            assertNotNull(state.exchangeRatio)
+            assertEquals(0.235, state.exchangeRatio!!, 0.001)
             assertNull(state.sendingLimitExceededMessage)
         }
     }
@@ -104,7 +105,7 @@ class CurrencyExchangeScreenViewModelTest {
     }
 
     @Test
-    fun `Sending amount input change, invalid format, sets a message to display and blocks conversion `() =
+    fun `Sending amount input change, invalid format, blocks conversion`() =
         runTest {
             // When
             viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("abc"))
@@ -114,7 +115,7 @@ class CurrencyExchangeScreenViewModelTest {
             viewModel.screenState.test {
                 val state = expectMostRecentItem()
                 assertEquals("abc", state.sendingAmount)
-                assertEquals("Amount must be a number", state.sendingLimitExceededMessage)
+                assertNull(state.sendingLimitExceededMessage)
                 assertNull(state.exchangeRatio)
             }
         }
@@ -299,7 +300,7 @@ class CurrencyExchangeScreenViewModelTest {
     }
 
     @Test
-    fun `Select sending currency click, opens sending currency selection dialog`() = runTest {
+    fun `Select currency click with SENDING type, opens currency selection dialog`() = runTest {
         // When
         viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.SENDING))
 
@@ -312,7 +313,7 @@ class CurrencyExchangeScreenViewModelTest {
     }
 
     @Test
-    fun `Select receiving currency click, opens receiving currency selection dialog`() = runTest {
+    fun `Select currency click with RECEIVING type, opens currency selection dialog`() = runTest {
         // When
         viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(currencyInputType = CurrencyInputType.RECEIVING))
 
@@ -325,7 +326,7 @@ class CurrencyExchangeScreenViewModelTest {
     }
 
     @Test
-    fun `Select sending currency, triggers conversion`() = runTest {
+    fun `Select SENDING type currency, triggers conversion`() = runTest {
         // Given
         viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
@@ -344,12 +345,13 @@ class CurrencyExchangeScreenViewModelTest {
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(eurCurrency, state.sendingCurrency)
-            assertEquals("1 EUR = 42.50 UAH", state.exchangeRatio)
+            assertNotNull(state.exchangeRatio)
+            assertEquals(42.5, state.exchangeRatio!!, 0.001)
         }
     }
 
     @Test
-    fun `Select receiving currency, triggers conversion`() = runTest {
+    fun `Select RECEVEIVING type currency, triggers conversion`() = runTest {
         // Given
         viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
