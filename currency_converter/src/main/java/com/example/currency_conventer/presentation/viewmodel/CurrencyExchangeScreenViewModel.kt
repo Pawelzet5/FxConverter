@@ -1,6 +1,5 @@
 package com.example.currency_conventer.presentation.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currency_conventer.domain.common.onError
@@ -14,7 +13,6 @@ import com.example.currency_conventer.presentation.action.CurrencyExchangeScreen
 import com.example.currency_conventer.presentation.state.*
 import com.example.currency_converter.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException
@@ -117,7 +115,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
             it.copy(
                 sendingCurrency = sendingCurrency,
                 receivingCurrency = receivingCurrency,
-                ratioText = null
+                exchangeRatio = null
             )
         }
         clearAndRecalculate()
@@ -153,7 +151,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
             _screenState.update {
                 it.copy(
                     receivingAmount = conversionResult.convertedAmount.toString(),
-                    ratioText = prepareRatioText(conversionResult),
+                    exchangeRatio = conversionResult.rate,
                     errorPanelState = null
                 )
             }
@@ -228,10 +226,4 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 }
         }
     }
-
-    private fun prepareRatioText(currencyConversion: CurrencyConversion): String {
-        val roundedRate = String.format(Locale.ROOT, "%.2f", currencyConversion.rate)
-        return "1 ${currencyConversion.from.code} = $roundedRate ${currencyConversion.to.code}"
-    }
-
 }

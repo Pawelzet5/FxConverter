@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.Currency
 import com.example.currency_conventer.presentation.ui.theme.*
+import com.example.currency_converter.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,9 @@ fun CurrencyPickerBottomSheet(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp)
         ) {
-            val headerText = if (isSendingCurrencySelection) "Sending from" else "Sending to"
+            val headerText = stringResource(
+                if (isSendingCurrencySelection) R.string.sending_from else R.string.sending_to
+            )
             Text(
                 text = headerText,
                 fontSize = 38.sp,
@@ -110,7 +113,11 @@ fun CurrencyListItem(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "${currency.nameResId} • ${currency.code}",
+                text = stringResource(
+                    R.string.currency_display_format,
+                    stringResource(currency.nameResId),
+                    currency.code
+                ),
                 fontSize = 16.sp,
                 color = secondaryTextColor
             )

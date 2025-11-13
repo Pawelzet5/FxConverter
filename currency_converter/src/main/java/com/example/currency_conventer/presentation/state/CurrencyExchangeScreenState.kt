@@ -9,7 +9,7 @@ data class CurrencyExchangeScreenState(
     val sendingAmount: String,
     val receivingCurrency: Currency,
     val receivingAmount: String,
-    val ratioText: String?,
+    val exchangeRatio: Double?,
     val sendingLimitExceededMessage: String?,
     val errorPanelState: ErrorPanelState? = null,
     val currencySelectionDialogState: CurrencySelectionDialogState = CurrencySelectionDialogState()
@@ -21,7 +21,7 @@ data class CurrencyExchangeScreenState(
             sendingAmount = CurrencyDefaults.DEFAULT_AMOUNT.toString(),
             receivingCurrency = CurrencyDefaults.DEFAULT_TO,
             receivingAmount = "",
-            ratioText = null,
+            exchangeRatio = null,
             sendingLimitExceededMessage = null,
             errorPanelState = null
         )

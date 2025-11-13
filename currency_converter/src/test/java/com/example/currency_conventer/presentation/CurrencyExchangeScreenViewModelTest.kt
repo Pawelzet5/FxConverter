@@ -75,7 +75,7 @@ class CurrencyExchangeScreenViewModelTest {
             val state = expectMostRecentItem()
             assertEquals("100", state.sendingAmount)
             assertEquals("23.5", state.receivingAmount)
-            assertEquals("1 PLN = 0.24 UAH", state.ratioText)
+            assertEquals(0.24, state.exchangeRatio)
             assertNull(state.sendingLimitExceededMessage)
         }
     }
@@ -98,7 +98,7 @@ class CurrencyExchangeScreenViewModelTest {
             assertEquals("25000", state.sendingAmount)
             assertEquals("5875.0", state.receivingAmount)
             assertEquals("Maximum sending amount: 20000.0 PLN", state.sendingLimitExceededMessage)
-            assertNotNull(state.ratioText)
+            assertNotNull(state.exchangeRatio)
         }
     }
 
@@ -114,7 +114,7 @@ class CurrencyExchangeScreenViewModelTest {
                 val state = expectMostRecentItem()
                 assertEquals("abc", state.sendingAmount)
                 assertEquals("Amount must be a number", state.sendingLimitExceededMessage)
-                assertNull(state.ratioText)
+                assertNull(state.exchangeRatio)
             }
         }
 
@@ -343,7 +343,7 @@ class CurrencyExchangeScreenViewModelTest {
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(eurCurrency, state.sendingCurrency)
-            assertEquals("1 EUR = 42.50 UAH", state.ratioText)
+            assertEquals(4.25, state.exchangeRatio)
         }
     }
 

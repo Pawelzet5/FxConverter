@@ -19,6 +19,7 @@
 
     <!-- Currency Details -->
     <string name="currency_display_format">%1$s • %2$s</string>
+    <string name="exchange_rate_format">1 %1$s = %2$s %3$s</string>
 
     <!-- Currency Names -->
     <string name="currency_pln">Polish Zloty</string>

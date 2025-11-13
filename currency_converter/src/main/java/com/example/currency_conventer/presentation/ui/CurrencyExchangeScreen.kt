@@ -18,9 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -137,9 +135,14 @@ fun CurrencyExchangeSection(
                     .align(BiasAlignment(horizontalBias = -0.75f, verticalBias = 0f))
             )
 
-            state.ratioText?.let { ratio ->
+            state.exchangeRatio?.let { ratio ->
                 ExchangeRateBadge(
-                    rate = ratio,
+                    ratioText = stringResource(
+                        R.string.exchange_rate_format,
+                        state.sendingCurrency.code,
+                        ratio,
+                        state.receivingCurrency.code
+                    ),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
@@ -345,7 +348,7 @@ fun CurrencySelector(
 
 @Composable
 fun ExchangeRateBadge(
-    rate: String,
+    ratioText: String,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -354,7 +357,7 @@ fun ExchangeRateBadge(
         color = Color.Black
     ) {
         Text(
-            text = rate,
+            text = ratioText,
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
