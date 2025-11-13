@@ -92,12 +92,22 @@ class ConversionScreenViewModel @Inject constructor(
     }
 
     private fun handleSendingCurrencySelected(currency: Currency) {
-        _screenState.update { it.copy(sendingCurrency = currency) }
+        _screenState.update {
+            it.copy(
+                sendingCurrency = currency,
+                ratioText = null
+            )
+        }
         clearAndRecalculate()
     }
 
     private fun handleReceivingCurrencySelected(currency: Currency) {
-        _screenState.update { it.copy(receivingCurrency = currency) }
+        _screenState.update {
+            it.copy(
+                receivingCurrency = currency,
+                ratioText = null
+            )
+        }
         clearAndRecalculate()
     }
 
@@ -114,7 +124,6 @@ class ConversionScreenViewModel @Inject constructor(
     private fun clearAndRecalculate() {
         _screenState.update {
             it.copy(
-                ratioText = null,
                 sendingLimitExceededMessage = null,
                 errorPanelState = null
             )
