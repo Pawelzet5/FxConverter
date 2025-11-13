@@ -9,6 +9,7 @@ import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
 import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
 import com.example.currency_conventer.presentation.state.ErrorPanelState
 import com.example.currency_conventer.presentation.viewmodel.CurrencyExchangeScreenViewModel
+import com.example.currency_converter.R
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -150,7 +151,11 @@ class CurrencyExchangeScreenViewModelTest {
         viewModel.screenState.test {
             val state = expectMostRecentItem()
             assertEquals(
-                ErrorPanelState("No Network", "Check your internet connection", true),
+                ErrorPanelState(
+                    titleResId = R.string.error_no_network,
+                    messageResId = R.string.error_no_network_message,
+                    isVisible = true
+                ),
                 state.errorPanelState
             )
         }

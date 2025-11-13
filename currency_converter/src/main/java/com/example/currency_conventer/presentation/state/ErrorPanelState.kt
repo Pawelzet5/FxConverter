@@ -1,7 +1,7 @@
 package com.example.currency_conventer.presentation.state
 
 data class ErrorPanelState(
-    val title: String,
-    val message: String,
+    val titleResId: Int,
+    val messageResId: Int,
     val isVisible: Boolean
 )

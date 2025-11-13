@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -104,12 +105,12 @@ fun CurrencyListItem(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = currency.countryName,
+                text = stringResource(currency.countryNameResId),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "${currency.name} • ${currency.code}",
+                text = "${currency.nameResId} • ${currency.code}",
                 fontSize = 16.sp,
                 color = secondaryTextColor
             )

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -67,12 +68,14 @@ fun CurrencyExchangeScreen(
             },
             modifier = Modifier
         )
+
         ErrorPanel(
             state = state.errorPanelState,
             onDismissClick = { onAction(CurrencyExchangeScreenAction.DismissErrorPanelClicked) },
             modifier = Modifier
         )
     }
+
     if (state.currencySelectionDialogState.isCurrencySelectionDialogOpen) {
         CurrencyPickerBottomSheet(
             sheetState = rememberModalBottomSheetState(),
@@ -83,7 +86,6 @@ fun CurrencyExchangeScreen(
         )
     }
 }
-
 
 @Composable
 fun CurrencyExchangeCard(
@@ -128,7 +130,7 @@ fun CurrencyExchangeCard(
             // Swap icon
             Icon(
                 painter = painterResource(id = R.drawable.ic_swap),
-                contentDescription = "Swap currencies",
+                contentDescription = stringResource(R.string.swap_currencies),
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
                     .clickable { onAction(CurrencyExchangeScreenAction.SwapClicked) }
@@ -142,7 +144,6 @@ fun CurrencyExchangeCard(
                 )
             }
         }
-
         state.sendingLimitExceededMessage?.let { warningMessage ->
             WarningMessage(message = warningMessage)
         }
@@ -160,6 +161,7 @@ fun SendingSection(
 ) {
     val amountColor = if (isWarningVisible) errorColor else primaryColor
     val outlineColor = if (isWarningVisible) errorColor else Color.Transparent
+
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -173,7 +175,7 @@ fun SendingSection(
         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
     ) {
         CurrencyInputSection(
-            label = "Sending from",
+            label = stringResource(R.string.sending_from),
             amount = amount,
             currency = currency,
             onAmountChange = onAmountChange,
@@ -184,7 +186,6 @@ fun SendingSection(
     }
 }
 
-
 @Composable
 fun ReceivingSection(
     amount: String,
@@ -194,7 +195,7 @@ fun ReceivingSection(
     modifier: Modifier = Modifier
 ) {
     CurrencyInputSection(
-        label = "Receiver gets",
+        label = stringResource(R.string.receiver_gets),
         amount = amount,
         currency = currency,
         onAmountChange = onAmountChange,
@@ -240,7 +241,6 @@ fun CurrencyInputSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(16.dp))
-
             DecimalTextField(
                 value = amount,
                 onValueChange = onAmountChange,
@@ -250,7 +250,6 @@ fun CurrencyInputSection(
         }
     }
 }
-
 
 @Composable
 fun DecimalTextField(
@@ -294,7 +293,7 @@ fun DecimalTextField(
             ) {
                 if (value.isEmpty()) {
                     Text(
-                        text = "0",
+                        text = stringResource(R.string.default_amount),
                         style = TextStyle(
                             color = textColor.copy(alpha = 0.3f),
                             fontSize = 40.sp,
@@ -327,7 +326,6 @@ fun CurrencySelector(
         )
 
         Spacer(Modifier.size(8.dp))
-
         Text(
             text = currency.code,
             fontSize = 16.sp,
@@ -336,10 +334,9 @@ fun CurrencySelector(
         )
 
         Spacer(Modifier.size(4.dp))
-
         Icon(
             imageVector = Icons.Default.KeyboardArrowDown,
-            contentDescription = "Select currency",
+            contentDescription = stringResource(R.string.select_currency),
             tint = Color.Gray,
             modifier = Modifier.size(16.dp)
         )
@@ -382,7 +379,7 @@ fun WarningMessage(
     ) {
         Icon(
             imageVector = Icons.Outlined.Info,
-            contentDescription = "Warning",
+            contentDescription = stringResource(R.string.warning),
             tint = warningTextColor,
             modifier = Modifier.size(24.dp)
         )
@@ -449,23 +446,23 @@ fun ErrorPanel(
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_error),
-                        contentDescription = "Error",
+                        contentDescription = stringResource(R.string.error),
                         tint = Color.Unspecified
                     )
 
                     Spacer(Modifier.size(20.dp))
-
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = state.title,
+                            text = stringResource(state.titleResId),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+
                         Text(
-                            text = state.message,
+                            text = stringResource(state.messageResId),
                             fontSize = 16.sp,
                             color = secondaryTextColor
                         )
@@ -479,7 +476,7 @@ fun ErrorPanel(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_close),
-                            contentDescription = "Dismiss Error",
+                            contentDescription = stringResource(R.string.dismiss_error),
                             tint = secondaryTextColor,
                         )
                     }

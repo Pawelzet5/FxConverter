@@ -264,7 +264,6 @@ class FxRatesRepositoryImplTest {
         // Then
         assertNotNull(euroCurrency)
         assertEquals("EUR", euroCurrency?.code)
-        assertEquals("Euro", euroCurrency?.name)
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.currency_conventer.presentation.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currency_conventer.domain.common.onError
@@ -11,7 +12,9 @@ import com.example.currency_conventer.domain.repository.FxRatesRepository
 import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
 import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
 import com.example.currency_conventer.presentation.state.*
+import com.example.currency_converter.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException
@@ -23,9 +26,9 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
     private val fxRatesRepository: FxRatesRepository,
     private val validateAmountUseCase: ValidateAmountUseCase
 ) : ViewModel() {
+
     private val _screenState = MutableStateFlow(CurrencyExchangeScreenState.initialValue())
     val screenState = _screenState.asStateFlow()
-
     private var conversionJob: Job? = null
     private val debounceTime = 300L
 
@@ -75,7 +78,6 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
 
     private fun handleReceivingAmountInputChange(newText: String) {
         _screenState.update { it.copy(receivingAmount = newText) }
-
         val amountInputValidationResult = validateAmountUseCase.amountInputValidation(newText)
         if (amountInputValidationResult is ValidationResult.Valid)
             recalculateSendingAmount(newText.toDouble())
@@ -88,7 +90,6 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
             amount = newReceivingAmount,
             onSuccess = { conversion ->
                 val calculatedSending = conversion.convertedAmount.toString()
-
                 val limitValidation = validateAmountUseCase.currencyLimitValidation(
                     calculatedSending,
                     screenState.value.sendingCurrency
@@ -101,8 +102,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                             limitValidation.warningMessage else null
                     )
                 }
-            }
-        )
+            })
     }
 
     private fun handleCurrencySelected(currency: Currency) {
@@ -112,6 +112,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
             if (isSendingCurrencySelected) currency else screenState.value.sendingCurrency
         val receivingCurrency =
             if (isSendingCurrencySelected) screenState.value.receivingCurrency else currency
+
         _screenState.update {
             it.copy(
                 sendingCurrency = sendingCurrency,
@@ -169,6 +170,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 _screenState.update {
                     it.copy(sendingLimitExceededMessage = null)
                 }
+
                 fetchExchangeDetails(
                     screenState.value.sendingCurrency,
                     screenState.value.receivingCurrency,
@@ -181,6 +183,7 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                 _screenState.update {
                     it.copy(sendingLimitExceededMessage = validationResult.warningMessage)
                 }
+
                 fetchExchangeDetails(
                     screenState.value.sendingCurrency,
                     screenState.value.receivingCurrency,
@@ -209,8 +212,8 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                         _screenState.update {
                             it.copy(
                                 errorPanelState = ErrorPanelState(
-                                    title = "No Network",
-                                    message = "Check your internet connection",
+                                    titleResId = R.string.error_no_network,
+                                    messageResId = R.string.error_no_network_message,
                                     isVisible = true
                                 )
                             )
@@ -219,8 +222,8 @@ class CurrencyExchangeScreenViewModel @Inject constructor(
                         _screenState.update {
                             it.copy(
                                 errorPanelState = ErrorPanelState(
-                                    title = "Unexpected error",
-                                    message = "Please try again later",
+                                    titleResId = R.string.error_unexpected,
+                                    messageResId = R.string.error_unexpected_message,
                                     isVisible = true
                                 )
                             )

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- UI Labels -->
+    <string name="sending_from">Sending from</string>
+    <string name="sending_to">Sending to</string>
+    <string name="receiver_gets">Receiver gets</string>
+    <string name="swap_currencies">Swap currencies</string>
+    <string name="select_currency">Select currency</string>
+    <string name="warning">Warning</string>
+    <string name="error">Error</string>
+    <string name="dismiss_error">Dismiss Error</string>
+    <string name="default_amount">0</string>
+
+    <!-- Error Messages -->
+    <string name="error_no_network">No Network</string>
+    <string name="error_no_network_message">Check your internet connection</string>
+    <string name="error_unexpected">Unexpected error</string>
+    <string name="error_unexpected_message">Please try again later</string>
+
+    <!-- Currency Details -->
+    <string name="currency_display_format">%1$s • %2$s</string>
+
+    <!-- Currency Names -->
+    <string name="currency_pln">Polish Zloty</string>
+    <string name="currency_eur">Euro</string>
+    <string name="currency_gbp">British Pound</string>
+    <string name="currency_uah">Ukrainian Hryvnia</string>
+
+    <!-- Country Names -->
+    <string name="country_poland">Poland</string>
+    <string name="country_germany">Germany</string>
+    <string name="country_great_britain">Great Britain</string>
+    <string name="country_ukraine">Ukraine</string>
+</resources>

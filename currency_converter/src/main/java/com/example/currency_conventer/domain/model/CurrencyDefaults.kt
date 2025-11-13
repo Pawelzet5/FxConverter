@@ -6,29 +6,29 @@ import com.example.currency_converter.R
 object CurrencyDefaults {
     val PLN = Currency(
         code = "PLN",
-        name = "Polish Zloty",
-        countryName = "Poland",
+        nameResId = R.string.currency_pln,
+        countryNameResId = R.string.country_poland,
         sendingLimit = 20000.0
     )
 
     val EUR = Currency(
         code = "EUR",
-        name = "Euro",
-        countryName = "Germany",
+        nameResId = R.string.currency_eur,
+        countryNameResId = R.string.country_germany,
         sendingLimit = 5000.0
     )
 
     val GBP = Currency(
         code = "GBP",
-        name = "British Pound",
-        countryName = "Great Britain",
+        nameResId = R.string.currency_gbp,
+        countryNameResId = R.string.country_great_britain,
         sendingLimit = 1000.0
     )
 
     val UAH = Currency(
         code = "UAH",
-        name = "Ukrainian Hryvnia",
-        countryName = "Ukraine",
+        nameResId = R.string.currency_uah,
+        countryNameResId = R.string.country_ukraine,
         sendingLimit = 50000.0
     )
 
@@ -37,7 +37,7 @@ object CurrencyDefaults {
         EUR -> R.drawable.ic_eur_big
         GBP -> R.drawable.ic_gbp_big
         UAH -> R.drawable.ic_uah_big
-        else ->  R.drawable.ic_uah_big
+        else -> R.drawable.ic_uah_big
     }
 
     val SUPPORTED_CURRENCIES = listOf(PLN, EUR, GBP, UAH)
