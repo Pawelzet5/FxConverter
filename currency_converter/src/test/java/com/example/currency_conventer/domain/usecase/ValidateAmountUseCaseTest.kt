@@ -28,11 +28,10 @@ class ValidateAmountUseCaseTest {
     }
 
     @Test
-    fun `Validate amount input, zero, returns valid`() {
-        val result = validateAmountUseCase.amountInputValidation("0")
-        assertTrue(result is ValidationResult.Valid)
+    fun `Validate amount input, too small number, returns invalid`() {
+        val result = validateAmountUseCase.amountInputValidation("0.99")
+        assertTrue(result is ValidationResult.Invalid)
     }
-
     @Test
     fun `Validate amount input, negative number, returns invalid`() {
         val result = validateAmountUseCase.amountInputValidation("-50")

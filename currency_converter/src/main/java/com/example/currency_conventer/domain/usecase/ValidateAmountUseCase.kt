@@ -16,7 +16,7 @@ class ValidateAmountUseCase @Inject constructor() {
         when {
             amount.isEmpty() -> ValidationResult.Invalid
             amount.isBlank() -> ValidationResult.Invalid
-            amount.toDouble() < 0 -> ValidationResult.Invalid
+            amount.toDouble() < 1 -> ValidationResult.Invalid
             else -> ValidationResult.Valid
         }
     } catch (e: NumberFormatException) {
