@@ -16,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
