@@ -3,7 +3,7 @@ package com.example.currency_conventer.presentation.state
 import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.Currency
 
-data class ConversionScreenState(
+data class CurrencyExchangeScreenState(
     val availableCurrencies: List<Currency>,
     val sendingCurrency: Currency,
     val sendingAmount: String,
@@ -15,7 +15,7 @@ data class ConversionScreenState(
     val currencySelectionDialogState: CurrencySelectionDialogState = CurrencySelectionDialogState()
 ) {
     companion object {
-        fun initialValue() = ConversionScreenState(
+        fun initialValue() = CurrencyExchangeScreenState(
             availableCurrencies = CurrencyDefaults.SUPPORTED_CURRENCIES,
             sendingCurrency = CurrencyDefaults.DEFAULT_FROM,
             sendingAmount = CurrencyDefaults.DEFAULT_AMOUNT.toString(),

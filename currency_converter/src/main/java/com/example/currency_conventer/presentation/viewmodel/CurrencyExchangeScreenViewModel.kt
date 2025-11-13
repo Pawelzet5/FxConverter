@@ -9,7 +9,7 @@ import com.example.currency_conventer.domain.model.dataclass.CurrencyConversion
 import com.example.currency_conventer.domain.model.dataclass.result.ValidationResult
 import com.example.currency_conventer.domain.repository.FxRatesRepository
 import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
-import com.example.currency_conventer.presentation.action.ConversionScreenAction
+import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
 import com.example.currency_conventer.presentation.state.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -19,34 +19,34 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class ConversionScreenViewModel @Inject constructor(
+class CurrencyExchangeScreenViewModel @Inject constructor(
     private val fxRatesRepository: FxRatesRepository,
     private val validateAmountUseCase: ValidateAmountUseCase
 ) : ViewModel() {
-    private val _screenState = MutableStateFlow(ConversionScreenState.initialValue())
+    private val _screenState = MutableStateFlow(CurrencyExchangeScreenState.initialValue())
     val screenState = _screenState.asStateFlow()
 
     private var conversionJob: Job? = null
     private val debounceTime = 300L
 
-    fun onAction(action: ConversionScreenAction) {
+    fun onAction(action: CurrencyExchangeScreenAction) {
         when (action) {
-            is ConversionScreenAction.OnSendingAmountInputChange ->
+            is CurrencyExchangeScreenAction.OnSendingAmountInputChange ->
                 handleSendingAmountInputChange(action.newText)
 
-            is ConversionScreenAction.OnReceivingAmountInputChange ->
+            is CurrencyExchangeScreenAction.OnReceivingAmountInputChange ->
                 handleReceivingAmountInputChange(action.newText)
 
-            is ConversionScreenAction.OnCurrencySelected ->
+            is CurrencyExchangeScreenAction.OnCurrencySelected ->
                 handleCurrencySelected(action.currency)
 
-            ConversionScreenAction.SwapClicked -> handleSwapClicked()
+            CurrencyExchangeScreenAction.SwapClicked -> handleSwapClicked()
 
-            ConversionScreenAction.DismissErrorPanelClicked -> _screenState.update {
+            CurrencyExchangeScreenAction.DismissErrorPanelClicked -> _screenState.update {
                 it.copy(errorPanelState = it.errorPanelState?.copy(isVisible = false))
             }
 
-            is ConversionScreenAction.SelectCurrencyClicked -> _screenState.update {
+            is CurrencyExchangeScreenAction.SelectCurrencyClicked -> _screenState.update {
                 it.copy(
                     currencySelectionDialogState = CurrencySelectionDialogState(
                         isCurrencySelectionDialogOpen = true,
@@ -55,7 +55,7 @@ class ConversionScreenViewModel @Inject constructor(
                 )
             }
 
-            ConversionScreenAction.SelectCurrencyDialogDismissed -> _screenState.update {
+            CurrencyExchangeScreenAction.SelectCurrencyDialogDismissed -> _screenState.update {
                 it.copy(
                     currencySelectionDialogState = CurrencySelectionDialogState(
                         isCurrencySelectionDialogOpen = false

@@ -6,9 +6,9 @@ import com.example.currency_conventer.domain.model.CurrencyDefaults
 import com.example.currency_conventer.domain.model.dataclass.CurrencyConversion
 import com.example.currency_conventer.domain.repository.FxRatesRepository
 import com.example.currency_conventer.domain.usecase.ValidateAmountUseCase
-import com.example.currency_conventer.presentation.action.ConversionScreenAction
+import com.example.currency_conventer.presentation.action.CurrencyExchangeScreenAction
 import com.example.currency_conventer.presentation.state.ErrorPanelState
-import com.example.currency_conventer.presentation.viewmodel.ConversionScreenViewModel
+import com.example.currency_conventer.presentation.viewmodel.CurrencyExchangeScreenViewModel
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,8 +18,8 @@ import org.junit.Assert.*
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ConversionScreenViewModelTest {
-    private lateinit var viewModel: ConversionScreenViewModel
+class CurrencyExchangeScreenViewModelTest {
+    private lateinit var viewModel: CurrencyExchangeScreenViewModel
     private lateinit var fxRatesRepository: FxRatesRepository
     private val validateAmountUseCase = ValidateAmountUseCase()
     private val testDispatcher = StandardTestDispatcher()
@@ -31,7 +31,7 @@ class ConversionScreenViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         fxRatesRepository = mockk()
-        viewModel = ConversionScreenViewModel(fxRatesRepository, validateAmountUseCase)
+        viewModel = CurrencyExchangeScreenViewModel(fxRatesRepository, validateAmountUseCase)
 
         val defaultConversion = CurrencyConversion(
             plnCurrency,
@@ -59,7 +59,7 @@ class ConversionScreenViewModelTest {
             } returns Result.Success(conversion)
 
             // When
-            viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+            viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
             advanceTimeBy(301)
 
             coVerify {
@@ -88,7 +88,7 @@ class ConversionScreenViewModelTest {
         } returns Result.Success(conversion)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("25000"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("25000"))
         advanceTimeBy(301)
 
         // Then
@@ -105,7 +105,7 @@ class ConversionScreenViewModelTest {
     fun `Sending amount input change, invalid format, sets a message to display and blocks conversion `() =
         runTest {
             // When
-            viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("abc"))
+            viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("abc"))
             advanceUntilIdle()
 
             // Then
@@ -120,11 +120,11 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Sending amount input change, empty string, clears receiving amount`() = runTest {
         // Given
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange(""))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange(""))
         advanceUntilIdle()
 
         // Then
@@ -143,7 +143,7 @@ class ConversionScreenViewModelTest {
         } returns Result.Error(IOException(), "Network unavailable")
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // Then
@@ -162,11 +162,11 @@ class ConversionScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(plnCurrency, uahCurrency, 100.0)
         } returns Result.Error(IOException(), "Network unavailable")
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // WHEN
-        viewModel.onAction(ConversionScreenAction.DismissErrorPanelClicked)
+        viewModel.onAction(CurrencyExchangeScreenAction.DismissErrorPanelClicked)
 
         // Then
         viewModel.screenState.test {
@@ -183,11 +183,11 @@ class ConversionScreenViewModelTest {
         } returns Result.Success(conversion)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("1"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("1"))
         advanceTimeBy(100)
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("10"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("10"))
         advanceTimeBy(100)
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // Then
@@ -201,7 +201,7 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Sending amount input change, previous input invalid, clears error`() = runTest {
         // Given
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("abc"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("abc"))
         advanceUntilIdle()
         val conversion = CurrencyConversion(plnCurrency, uahCurrency, 0.235, 23.5)
         coEvery {
@@ -209,7 +209,7 @@ class ConversionScreenViewModelTest {
         } returns Result.Success(conversion)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // Then
@@ -229,7 +229,7 @@ class ConversionScreenViewModelTest {
         } returns Result.Success(conversion)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnReceivingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnReceivingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // Then
@@ -258,7 +258,7 @@ class ConversionScreenViewModelTest {
         } returns Result.Success(conversion)
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnReceivingAmountInputChange("5000"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnReceivingAmountInputChange("5000"))
         advanceTimeBy(301)
 
         // Then
@@ -281,7 +281,7 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Receiving amount input change, invalid format, does not calculate`() = runTest {
         // When
-        viewModel.onAction(ConversionScreenAction.OnReceivingAmountInputChange("abc"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnReceivingAmountInputChange("abc"))
         advanceUntilIdle()
 
         // Then
@@ -295,7 +295,7 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Select sending currency click, opens sending currency selection dialog`() = runTest {
         // When
-        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
 
         // Then
         viewModel.screenState.test {
@@ -308,7 +308,7 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Select receiving currency click, opens receiving currency selection dialog`() = runTest {
         // When
-        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
 
         // Then
         viewModel.screenState.test {
@@ -321,17 +321,17 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Select sending currency, triggers conversion`() = runTest {
         // Given
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
         val eurCurrency = CurrencyDefaults.EUR
         val conversion = CurrencyConversion(eurCurrency, uahCurrency, 42.50, 4250.0)
         coEvery {
             fxRatesRepository.getCurrencyConversion(eurCurrency, uahCurrency, 100.0)
         } returns Result.Success(conversion)
-        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = true))
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnCurrencySelected(eurCurrency))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(eurCurrency))
         advanceTimeBy(301)
 
         // Then
@@ -345,17 +345,17 @@ class ConversionScreenViewModelTest {
     @Test
     fun `Select receiving currency, triggers conversion`() = runTest {
         // Given
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
         val gbpCurrency = CurrencyDefaults.GBP
         val conversion = CurrencyConversion(plnCurrency, gbpCurrency, 0.19, 19.0)
         coEvery {
             fxRatesRepository.getCurrencyConversion(plnCurrency, gbpCurrency, 100.0)
         } returns Result.Success(conversion)
-        viewModel.onAction(ConversionScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
+        viewModel.onAction(CurrencyExchangeScreenAction.SelectCurrencyClicked(isSendingCurrencySelection = false))
 
         // When
-        viewModel.onAction(ConversionScreenAction.OnCurrencySelected(gbpCurrency))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnCurrencySelected(gbpCurrency))
         advanceTimeBy(301)
 
         // Then
@@ -376,11 +376,11 @@ class ConversionScreenViewModelTest {
         coEvery {
             fxRatesRepository.getCurrencyConversion(uahCurrency, plnCurrency, any())
         } returns Result.Success(uahToPlnConversion)
-        viewModel.onAction(ConversionScreenAction.OnSendingAmountInputChange("100"))
+        viewModel.onAction(CurrencyExchangeScreenAction.OnSendingAmountInputChange("100"))
         advanceTimeBy(301)
 
         // When
-        viewModel.onAction(ConversionScreenAction.SwapClicked)
+        viewModel.onAction(CurrencyExchangeScreenAction.SwapClicked)
         advanceTimeBy(301)
 
         // Then
