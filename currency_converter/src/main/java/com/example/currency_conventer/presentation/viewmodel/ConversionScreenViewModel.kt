@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.IOException
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -219,9 +220,8 @@ class ConversionScreenViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun prepareRatioText(currencyConversion: CurrencyConversion): String {
-        val roundedRate = String.format("%.2f", currencyConversion.rate)
+        val roundedRate = String.format(Locale.ROOT, "%.2f", currencyConversion.rate)
         return "1 ${currencyConversion.from.code} = $roundedRate ${currencyConversion.to.code}"
     }
 
