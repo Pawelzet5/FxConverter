@@ -453,7 +453,7 @@ fun ErrorPanel(
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(20.dp)
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.Top
                 ) {
@@ -463,7 +463,7 @@ fun ErrorPanel(
                         tint = Color.Unspecified
                     )
 
-                    Spacer(Modifier.size(20.dp))
+                    Spacer(Modifier.size(8.dp))
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
